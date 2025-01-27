@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div id="chat">
+      <ul id="users"></ul>
+
+      <input id="input" type="text" />
+      <button type="submit" id="send">send</button>
+    </div>
+  </body>
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io();
+
+    const chat = document.getElementById("chat");
+    const userList = document.getElementById("users");
+    // const send = document.getElementById("send");
+    const input = document.getElementById("input");
+    const send = document.getElementById("send");
+
+    // socket.emit("join", username);
+
+    socket.on("userList", (list) => {
+      list.forEach((user) => {
+        const listItem = document.createElement(`li`);
+        listItem.innerText = user;
+        userList.appendChild(listItem);
+      });
+    });
+
+    socket.on("typing", (message) => {
+      const isTypingEl = document.createElement("div");
+      isTyping.innerText = message;
+      chat.appendChild(isTypingEl);
+      console.log(message);
+    });
+
+    send.addEventListener("click", (e) => {
+      sendMessage();
+    });
+
+    input.addEventListener("input", (e) => {
+      isTyping();
+    });
+
+    function sendMessage() {
+      socket.emit("send-message", input.value);
+    }
+
+    function isTyping() {
+      socket.emit("typing");
+    }
+  </script>
+</html>
